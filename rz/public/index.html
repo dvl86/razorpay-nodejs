@@ -1,0 +1,40 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>Razorpay Payment Gateway with Nodejs</title>
+
+    </head>
+    <body>
+        <h1>Razorpay</h1>
+        <button id="rzp-button1">Pay</button>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            document.getElementById("rzp-button1").addEventListener('click', async function(e){
+                e.preventDefault();
+                let response =  await fetch("http://localhost:3000/payment", {
+                    method:"POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        amount:500,
+                        
+                    }),
+                });
+                let orderData =  await response.json();
+                console.log(orderData);
+                var options = {
+                    key:"rzp_test_poUdDfm2skEGWW",
+                    amount:"500",
+                    currencry:"INR",
+                    order_id:orderData.id,
+                    handler:function(response){
+                        console.log(response);
+                    },
+                }
+               var rzp1 = new Razorpay(options);
+                rzp1.open();
+            });
+        </script>
+    </body>
+</html>
